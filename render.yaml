@@ -2,24 +2,20 @@ services:
   - type: web
     name: medical-rag-backend
     env: docker
+    region: oregon
+    plan: free
     rootDir: backend
     dockerfilePath: Dockerfile
-    plan: free
+    healthCheckPath: /health
     envVars:
       - key: GROQ_API_KEY
         sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false
       - key: QDRANT_URL
-        value: http://medical-rag-qdrant:6333
-      - key: QDRANT_COLLECTION_NAME
-        value: medical_docs
+        value: http://localhost:6333
 
-  - type: pserv
-    name: medical-rag-qdrant
-    env: docker
-    image:
-      url: qdrant/qdrant:latest
-    plan: starter
-    disk:
-      name: qdrant-data
-      mountPath: /qdrant/storage
-      sizeGB: 1
+preDeployCommand: |
+  docker run --rm -d -p 6333:6333 --name qdrant-temp qdrant/qdrant:latest && sleep 10
