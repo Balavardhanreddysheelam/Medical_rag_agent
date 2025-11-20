@@ -17,5 +17,5 @@ services:
       - key: QDRANT_URL
         value: http://localhost:6333
 
-preDeployCommand: |
+preDeployCommand:
   docker run --rm -d -p 6333:6333 --name qdrant-temp qdrant/qdrant:latest && sleep 10
