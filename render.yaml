@@ -12,24 +12,6 @@ services:
       - key: QDRANT_COLLECTION_NAME
         value: medical_docs
 
-  - type: web
-    name: medical-rag-frontend
-    env: node
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    plan: free
-    envVars:
-      - key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-        sync: false
-      - key: CLERK_SECRET_KEY
-        sync: false
-      - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: medical-rag-backend
-          property: url
-
   - type: pserv
     name: medical-rag-qdrant
     env: docker
