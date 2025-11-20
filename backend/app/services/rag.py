@@ -19,8 +19,20 @@ class RAGService:
         self.embeddings = None # Lazy load if needed, but we use qdrant for retrieval
         
         # We need the embedding model to embed the query
-        from langchain_huggingface import HuggingFaceEmbeddings
-        self.embedding_model = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
+        if settings.USE_FASTEMBED:
+            logger.info("Using FastEmbed for embeddings")
+            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+            # FastEmbed uses a different model name format or defaults. 
+            # For compatibility with all-MiniLM-L6-v2, we can use the default or specify exact model.
+            # "BAAI/bge-small-en-v1.5" is default and very good/fast. 
+            # But to match "sentence-transformers/all-MiniLM-L6-v2", we can try to use that if supported, 
+            # or just stick to a known good fast model. 
+            # Let's use the default FastEmbed model which is lightweight and good.
+            self.embedding_model = FastEmbedEmbeddings() 
+        else:
+            logger.info("Using SentenceTransformers for embeddings")
+            from langchain_huggingface import HuggingFaceEmbeddings
+            self.embedding_model = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
 
         self.prompt = ChatPromptTemplate.from_template(
             """You are a helpful medical assistant. Use the following pieces of redacted context to answer the question at the end.

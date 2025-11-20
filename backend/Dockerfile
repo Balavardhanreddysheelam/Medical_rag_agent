@@ -28,10 +28,11 @@ RUN mkdir -p /tmp/qdrant_install \
   && rm -rf /tmp/qdrant_install
 
 ENV PATH="/opt/qdrant:${PATH}"
+ENV USE_FASTEMBED=true
 
-COPY requirements.txt .
+COPY requirements-prod.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements-prod.txt
 
 # Download spaCy model
 RUN python -m spacy download en_core_web_sm
