@@ -24,7 +24,7 @@ class IngestionService:
             chunk_size=1000,
             chunk_overlap=200
         )
-        self._ensure_collection()
+        # self._ensure_collection() # Moved to startup event to avoid import-time connection errors
 
     def _ensure_collection(self):
         collections = qdrant_client.get_collections().collections

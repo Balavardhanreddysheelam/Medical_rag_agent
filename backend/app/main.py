@@ -8,7 +8,19 @@ import structlog
 
 logger = structlog.get_logger()
 
+from app.services.ingestion import ingestion_service
+
 app = FastAPI(title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json")
+
+@app.on_event("startup")
+async def startup_event():
+    try:
+        logger.info("Initializing Qdrant collection...")
+        ingestion_service._ensure_collection()
+        logger.info("Qdrant collection initialized.")
+    except Exception as e:
+        logger.error(f"Failed to initialize Qdrant: {e}")
+        # Don't crash the app, just log it. Qdrant might take a moment to start.
 
 # Rate Limiter
 app.state.limiter = limiter

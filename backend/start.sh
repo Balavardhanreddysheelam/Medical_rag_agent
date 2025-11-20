@@ -6,7 +6,7 @@ mkdir -p "$QDRANT_STORAGE_DIR"
 
 echo "Starting Qdrant service..."
 export QDRANT__STORAGE__STORAGE_PATH="$QDRANT_STORAGE_DIR"
-qdrant --http-port 6333 --grpc-port 6334 &
+qdrant &
 QDRANT_PID=$!
 
 cleanup() {
