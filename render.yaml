@@ -3,6 +3,7 @@ services:
     name: medical-rag-backend
     env: docker
     rootDir: backend
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: GROQ_API_KEY
