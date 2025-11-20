@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Install system dependencies
 # build-essential, libssl-dev, libffi-dev, python3-dev are often needed for python packages
+# libgomp1 is needed for onnxruntime (FastEmbed)
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
   curl \
@@ -15,6 +16,7 @@ RUN apt-get update \
   libssl-dev \
   libffi-dev \
   python3-dev \
+  libgomp1 \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Qdrant binary
