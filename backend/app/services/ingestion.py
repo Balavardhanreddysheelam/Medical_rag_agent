@@ -3,7 +3,7 @@ from typing import List
 from fastapi import UploadFile
 from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings # Imported conditionally
 from qdrant_client.http import models
 from app.core.config import settings
 from app.core.vector_store import qdrant_client
@@ -15,7 +15,11 @@ logger = structlog.get_logger()
 
 class IngestionService:
     def __init__(self):
-        self.embeddings = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
+        if settings.USE_FASTEMBED:
+            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+            self.embeddings = FastEmbedEmbeddings()
+        else:
+            self.embeddings = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200
