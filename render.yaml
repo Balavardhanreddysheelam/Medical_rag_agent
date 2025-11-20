@@ -18,6 +18,7 @@ services:
     env: docker
     image:
       url: qdrant/qdrant:latest
+    plan: starter
     disk:
       name: qdrant-data
       mountPath: /qdrant/storage
