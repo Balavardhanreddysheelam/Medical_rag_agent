@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: medical-rag-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        value: http://medical-rag-qdrant:6333
+      - key: QDRANT_COLLECTION_NAME
+        value: medical_docs
+
+  - type: web
+    name: medical-rag-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: medical-rag-backend
+          property: url
+
+  - type: pserv
+    name: medical-rag-qdrant
+    env: docker
+    image: qdrant/qdrant:latest
+    disk:
+      name: qdrant-data
+      mountPath: /qdrant/storage
+      sizeGB: 1
