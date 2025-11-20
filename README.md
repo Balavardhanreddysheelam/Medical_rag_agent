@@ -158,19 +158,6 @@ uvicorn app.main:app --reload
 
 ### Frontend Development
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### Running Tests
-
-```bash
-cd backend
-pytest
-```
-
 ## Security Notes
 
 This is a demonstration project and should not be used with real patient data in production without implementing proper HIPAA compliance measures. Production deployment would require:
