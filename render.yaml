@@ -33,7 +33,8 @@ services:
   - type: pserv
     name: medical-rag-qdrant
     env: docker
-    image: qdrant/qdrant:latest
+    image:
+      url: qdrant/qdrant:latest
     disk:
       name: qdrant-data
       mountPath: /qdrant/storage
