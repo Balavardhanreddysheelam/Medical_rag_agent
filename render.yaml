@@ -15,4 +15,6 @@ services:
       - key: CLERK_PUBLISHABLE_KEY
         sync: false
       - key: QDRANT_URL
-        value: http://localhost:6333
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false

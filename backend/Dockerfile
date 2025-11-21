@@ -19,17 +19,8 @@ RUN apt-get update \
   libgomp1 \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Qdrant binary
-# We download to a temp dir, find the binary, and move it to /opt/qdrant
-RUN mkdir -p /tmp/qdrant_install \
-  && curl -L "https://github.com/qdrant/qdrant/releases/download/v${QDRANT_VERSION}/qdrant-x86_64-unknown-linux-gnu.tar.gz" \
-  | tar -xz -C /tmp/qdrant_install \
-  && mkdir -p /opt/qdrant \
-  && find /tmp/qdrant_install -name "qdrant" -type f -exec mv {} /opt/qdrant/qdrant \; \
-  && chmod +x /opt/qdrant/qdrant \
-  && rm -rf /tmp/qdrant_install
+# Qdrant binary installation removed - using Qdrant Cloud
 
-ENV PATH="/opt/qdrant:${PATH}"
 ENV USE_FASTEMBED=true
 ENV FASTEMBED_CACHE_PATH="/tmp/fastembed_cache"
 

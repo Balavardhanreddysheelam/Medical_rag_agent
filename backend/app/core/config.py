@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Medical RAG Agent"
@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     
     # Vector DB
     QDRANT_URL: str = "http://qdrant:6333"
+    QDRANT_API_KEY: Optional[str] = None
     QDRANT_COLLECTION_NAME: str = "medical_docs"
     
     # Model Config
