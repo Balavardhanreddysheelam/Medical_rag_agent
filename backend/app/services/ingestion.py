@@ -19,7 +19,10 @@ class IngestionService:
             raise ValueError("HUGGINGFACE_API_KEY is required for Cloud Embeddings. Please set it in environment variables.")
             
         from app.core.cloud_embeddings import LightCloudEmbeddings
-        self.embeddings = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
+        self.embeddings = LightCloudEmbeddings(
+            api_key=settings.HUGGINGFACE_API_KEY,
+            model=settings.EMBEDDING_MODEL
+        )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200

@@ -24,7 +24,10 @@ class RAGService:
 
         logger.info("Using Cloud Embeddings (Hugging Face API)")
         from app.core.cloud_embeddings import LightCloudEmbeddings
-        self.embedding_model = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
+        self.embedding_model = LightCloudEmbeddings(
+            api_key=settings.HUGGINGFACE_API_KEY,
+            model=settings.EMBEDDING_MODEL
+        )
 
         self.prompt = ChatPromptTemplate.from_template(
             """You are a helpful medical assistant. Use the following pieces of redacted context to answer the question at the end.
