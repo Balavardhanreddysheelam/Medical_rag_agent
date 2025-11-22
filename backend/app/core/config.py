@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     QDRANT_COLLECTION_NAME: str = "medical_docs"
     
     # Model Config
-    EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
     LLM_MODEL: str = "llama-3.1-8b-instant"
     USE_FASTEMBED: bool = False # Disabled in favor of Cloud Embeddings
     USE_CLOUD_EMBEDDINGS: bool = True
