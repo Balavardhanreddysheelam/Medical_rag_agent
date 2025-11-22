@@ -37,7 +37,7 @@ class IngestionService:
             qdrant_client.create_collection(
                 collection_name=settings.QDRANT_COLLECTION_NAME,
                 vectors_config=models.VectorParams(
-                    size=384, # Dimension for all-MiniLM-L6-v2
+                    size=768, # Dimension for all-mpnet-base-v2
                     distance=models.Distance.COSINE
                 )
             )
