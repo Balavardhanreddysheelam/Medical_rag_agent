@@ -3,7 +3,7 @@ uvicorn[standard]
 pydantic
 pydantic-settings
 python-multipart
-spacy
+# spacy # Removed to save memory
 fastembed
 qdrant-client
 groq

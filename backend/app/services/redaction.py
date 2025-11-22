@@ -1,31 +1,26 @@
-import spacy
+import re
 import structlog
 
 logger = structlog.get_logger()
 
 class RedactionService:
-    def __init__(self, model: str = "en_core_web_sm"):
-        try:
-            self.nlp = spacy.load(model)
-        except OSError:
-            logger.warning(f"Model {model} not found. Downloading...")
-            from spacy.cli import download
-            download(model)
-            self.nlp = spacy.load(model)
-        
-        self.phi_labels = {"PERSON", "DATE", "GPE", "ORG", "PHONE", "EMAIL"} # Basic set, can be expanded
+    def __init__(self):
+        # Regex patterns for common PHI
+        self.patterns = {
+            "EMAIL": r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
+            "PHONE": r'\b(?:\+?1[-.]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})\b',
+            "DATE": r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b',
+            # Simple SSN pattern
+            "SSN": r'\b\d{3}-\d{2}-\d{4}\b',
+        }
+        logger.info("Initialized Regex-based RedactionService")
 
     def redact(self, text: str) -> str:
-        doc = self.nlp(text)
         redacted_text = text
         
-        # We iterate in reverse to avoid messing up indices when replacing
-        for ent in reversed(doc.ents):
-            if ent.label_ in self.phi_labels:
-                start = ent.start_char
-                end = ent.end_char
-                redacted_text = redacted_text[:start] + f"[{ent.label_}]" + redacted_text[end:]
-        
+        for label, pattern in self.patterns.items():
+            redacted_text = re.sub(pattern, f"[{label}]", redacted_text)
+            
         return redacted_text
 
 redaction_service = RedactionService()

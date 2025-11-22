@@ -28,8 +28,8 @@ COPY requirements-prod.txt .
 
 RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# Download spaCy model
-RUN python -m spacy download en_core_web_sm
+# Spacy model download removed for memory optimization
+# RUN python -m spacy download en_core_web_sm
 
 # Pre-download FastEmbed model to speed up startup
 RUN mkdir -p ${FASTEMBED_CACHE_PATH} \
