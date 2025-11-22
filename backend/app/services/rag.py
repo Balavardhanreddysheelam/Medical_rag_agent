@@ -19,18 +19,12 @@ class RAGService:
         self.embeddings = None # Lazy load if needed, but we use qdrant for retrieval
         
         # We need the embedding model to embed the query
-        if settings.USE_CLOUD_EMBEDDINGS and settings.HUGGINGFACE_API_KEY:
-            logger.info("Using Cloud Embeddings (Hugging Face API)")
-            from app.core.cloud_embeddings import LightCloudEmbeddings
-            self.embedding_model = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
-        elif settings.USE_FASTEMBED:
-            logger.info("Using FastEmbed for embeddings")
-            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            self.embedding_model = FastEmbedEmbeddings() 
-        else:
-            logger.info("Using SentenceTransformers for embeddings")
-            from langchain_huggingface import HuggingFaceEmbeddings
-            self.embedding_model = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
+        if not settings.HUGGINGFACE_API_KEY:
+             raise ValueError("HUGGINGFACE_API_KEY is required for Cloud Embeddings. Please set it in environment variables.")
+
+        logger.info("Using Cloud Embeddings (Hugging Face API)")
+        from app.core.cloud_embeddings import LightCloudEmbeddings
+        self.embedding_model = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
 
         self.prompt = ChatPromptTemplate.from_template(
             """You are a helpful medical assistant. Use the following pieces of redacted context to answer the question at the end.

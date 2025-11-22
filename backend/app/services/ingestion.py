@@ -15,14 +15,11 @@ logger = structlog.get_logger()
 
 class IngestionService:
     def __init__(self):
-        if settings.USE_CLOUD_EMBEDDINGS and settings.HUGGINGFACE_API_KEY:
-            from app.core.cloud_embeddings import LightCloudEmbeddings
-            self.embeddings = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
-        elif settings.USE_FASTEMBED:
-            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            self.embeddings = FastEmbedEmbeddings()
-        else:
-            self.embeddings = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL)
+        if not settings.HUGGINGFACE_API_KEY:
+            raise ValueError("HUGGINGFACE_API_KEY is required for Cloud Embeddings. Please set it in environment variables.")
+            
+        from app.core.cloud_embeddings import LightCloudEmbeddings
+        self.embeddings = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200
