@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # Model Config
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
     LLM_MODEL: str = "llama-3.1-8b-instant"
-    USE_FASTEMBED: bool = False
+    USE_FASTEMBED: bool = True
 
     class Config:
         env_file = ".env"

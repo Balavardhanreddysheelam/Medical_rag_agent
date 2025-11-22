@@ -18,3 +18,5 @@ services:
         sync: false
       - key: QDRANT_API_KEY
         sync: false
+      - key: USE_FASTEMBED
+        value: true

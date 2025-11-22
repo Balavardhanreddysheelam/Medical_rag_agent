@@ -10,7 +10,7 @@ groq
 langchain
 langchain-community
 langchain-groq
-langchain-huggingface
+# langchain-huggingface # Removed to save memory
 langchain-text-splitters
 langchain-core
 pypdf
@@ -20,8 +20,8 @@ slowapi
 pytest
 httpx
 reportlab
-ragas
-datasets
+# ragas # Removed to save memory
+# datasets # Removed to save memory
 python-jose[cryptography]
 passlib[bcrypt]
 python-dotenv
