@@ -31,9 +31,9 @@ RUN pip install --no-cache-dir -r requirements-prod.txt
 # Spacy model download removed for memory optimization
 # RUN python -m spacy download en_core_web_sm
 
-# Pre-download FastEmbed model to speed up startup
-RUN mkdir -p ${FASTEMBED_CACHE_PATH} \
-  && python -c "from langchain_community.embeddings.fastembed import FastEmbedEmbeddings; FastEmbedEmbeddings()"
+# Pre-download FastEmbed model removed
+# RUN mkdir -p ${FASTEMBED_CACHE_PATH} \
+#   && python -c "from langchain_community.embeddings.fastembed import FastEmbedEmbeddings; FastEmbedEmbeddings()"
 
 COPY . .
 

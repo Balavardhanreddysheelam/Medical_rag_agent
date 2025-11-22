@@ -4,7 +4,7 @@ pydantic
 pydantic-settings
 python-multipart
 # spacy # Removed to save memory
-fastembed
+# fastembed # Removed to save memory
 qdrant-client
 groq
 langchain

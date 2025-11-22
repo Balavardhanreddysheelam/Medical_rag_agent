@@ -19,7 +19,9 @@ class Settings(BaseSettings):
     # Model Config
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
     LLM_MODEL: str = "llama-3.1-8b-instant"
-    USE_FASTEMBED: bool = True
+    USE_FASTEMBED: bool = False # Disabled in favor of Cloud Embeddings
+    USE_CLOUD_EMBEDDINGS: bool = True
+    HUGGINGFACE_API_KEY: Optional[str] = None
 
     class Config:
         env_file = ".env"

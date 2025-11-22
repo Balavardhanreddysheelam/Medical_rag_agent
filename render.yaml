@@ -19,4 +19,8 @@ services:
       - key: QDRANT_API_KEY
         sync: false
       - key: USE_FASTEMBED
+        value: false
+      - key: USE_CLOUD_EMBEDDINGS
         value: true
+      - key: HUGGINGFACE_API_KEY
+        sync: false

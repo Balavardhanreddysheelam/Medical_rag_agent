@@ -15,7 +15,10 @@ logger = structlog.get_logger()
 
 class IngestionService:
     def __init__(self):
-        if settings.USE_FASTEMBED:
+        if settings.USE_CLOUD_EMBEDDINGS and settings.HUGGINGFACE_API_KEY:
+            from app.core.cloud_embeddings import LightCloudEmbeddings
+            self.embeddings = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
+        elif settings.USE_FASTEMBED:
             from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
             self.embeddings = FastEmbedEmbeddings()
         else:

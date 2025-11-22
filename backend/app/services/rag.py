@@ -19,15 +19,13 @@ class RAGService:
         self.embeddings = None # Lazy load if needed, but we use qdrant for retrieval
         
         # We need the embedding model to embed the query
-        if settings.USE_FASTEMBED:
+        if settings.USE_CLOUD_EMBEDDINGS and settings.HUGGINGFACE_API_KEY:
+            logger.info("Using Cloud Embeddings (Hugging Face API)")
+            from app.core.cloud_embeddings import LightCloudEmbeddings
+            self.embedding_model = LightCloudEmbeddings(api_key=settings.HUGGINGFACE_API_KEY)
+        elif settings.USE_FASTEMBED:
             logger.info("Using FastEmbed for embeddings")
             from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            # FastEmbed uses a different model name format or defaults. 
-            # For compatibility with all-MiniLM-L6-v2, we can use the default or specify exact model.
-            # "BAAI/bge-small-en-v1.5" is default and very good/fast. 
-            # But to match "sentence-transformers/all-MiniLM-L6-v2", we can try to use that if supported, 
-            # or just stick to a known good fast model. 
-            # Let's use the default FastEmbed model which is lightweight and good.
             self.embedding_model = FastEmbedEmbeddings() 
         else:
             logger.info("Using SentenceTransformers for embeddings")
