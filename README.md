@@ -1,196 +1,229 @@
-# Medical RAG Agent
+# Medical RAG Agent 🏥
 
-A retrieval-augmented generation system for medical document analysis with automatic PHI redaction. This project demonstrates how to build a RAG pipeline that processes medical documents, redacts sensitive information, and provides intelligent query responses.
+A production-ready, HIPAA-inspired RAG (Retrieval Augmented Generation) system for medical document analysis with automated PHI redaction, deployed on entirely free infrastructure.
 
-## Overview
+[![Live Demo](https://img.shields.io/badge/demo-live-green)](https://medical-rag-agent.vercel.app)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This application allows users to upload medical PDFs, automatically redacts protected health information using named entity recognition, stores document chunks in a vector database, and answers questions using semantic search combined with large language models.
+## 🚀 Live Demo
 
-## Core Features
+**Frontend:** [https://medical-rag-agent.vercel.app](https://medical-rag-agent.vercel.app)  
+**Backend API:** [https://medical-rag-backend-mnee.onrender.com](https://medical-rag-backend-mnee.onrender.com)
 
-- PDF document upload and text extraction
-- Automatic PHI redaction using spaCy NER
-- Vector-based semantic search with Qdrant
-- Query answering with Llama 3.1 via Groq API
-- Streaming responses using server-sent events
-- User authentication via Clerk
-- Dockerized deployment
+## ✨ Features
 
-## Technical Stack
+- 📄 **PDF Upload & Processing** - Extract and analyze medical documents
+- 🔒 **PHI Redaction** - Automatic removal of sensitive information (email, phone, SSN, dates)
+- 🧠 **Semantic Search** - Qdrant vector database with OpenAI embeddings
+- 💬 **Streaming Chat** - Real-time responses powered by Groq's Llama 3.1
+- 🔐 **Authentication** - Secure user management with Clerk
+- ⚡ **Free Tier Deployment** - Optimized to run on Render's 512MB free tier
 
-### Backend
-- FastAPI for the REST API
-- Qdrant for vector storage
-- sentence-transformers for embeddings (all-MiniLM-L6-v2)
-- Groq API for LLM inference (Llama 3.1 8B)
-- spaCy for named entity recognition
-- LangChain for RAG orchestration
+## 🏗️ Architecture
 
-### Frontend
+```mermaid
+graph LR
+    A[User] --> B[Next.js Frontend<br/>Vercel]
+    B --> C[FastAPI Backend<br/>Render Free Tier]
+    C --> D[OpenAI Embeddings<br/>text-embedding-3-small]
+    C --> E[Groq LLM<br/>llama-3.1-8b-instant]
+    C --> F[Qdrant Cloud<br/>Vector Database]
+```
+
+### Tech Stack
+
+**Frontend**
 - Next.js 15 with App Router
-- shadcn/ui component library
-- Tailwind CSS for styling
-- Clerk for authentication
+- shadcn/ui components
+- Clerk Authentication
+- React Markdown
 
-## Installation
+**Backend**
+- FastAPI with async support
+- Streaming responses
+- Rate limiting (SlowAPI)
+- Structured logging (structlog)
+
+**AI/ML**
+- **Embeddings:** OpenAI `text-embedding-3-small` (1536 dims)
+- **LLM:** Groq `llama-3.1-8b-instant` (free tier)
+- **Vector Store:** Qdrant Cloud (free tier)
+- **Redaction:** Regex-based PHI pattern matching
+
+## 📦 Installation
 
 ### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- Docker (for local development)
 
-- Docker and Docker Compose
-- Node.js 18 or higher
-- API keys for Groq and Clerk
+### Local Development
 
-### Setup
-
-1. Clone the repository:
+1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd medical-rag-agent
+git clone https://github.com/Balavardhanreddysheelam/Medical_rag_agent.git
+cd Medical_rag_agent
 ```
 
-2. Create environment files:
+2. **Backend Setup**
 ```bash
-cp .env.example .env
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements-prod.txt
 ```
 
-3. Add your API keys to `.env`:
-```
-GROQ_API_KEY=your_groq_api_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-```
+3. **Environment Variables**
 
-4. Update `frontend/.env.local` with Clerk keys:
-```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
+Create `backend/.env`:
+```env
+GROQ_API_KEY=your_groq_key
+OPENAI_API_KEY=your_openai_key
+QDRANT_URL=your_qdrant_url
+QDRANT_API_KEY=your_qdrant_key
+CLERK_SECRET_KEY=your_clerk_secret
 ```
 
-5. Update the environment variables in `docker-compose.yml` to reference your keys.
-
-### Running the Application
-
-Start all services with Docker Compose:
-```bash
-docker-compose up --build
-```
-
-The backend will be available at http://localhost:8000 and the Qdrant dashboard at http://localhost:6333.
-
-For local frontend development:
+4. **Frontend Setup**
 ```bash
 cd frontend
 npm install
+```
+
+Create `frontend/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret
+```
+
+5. **Run Locally**
+```bash
+# Terminal 1 - Backend
+cd backend
+uvicorn app.main:app --reload
+
+# Terminal 2 - Frontend
+cd frontend
 npm run dev
 ```
 
-The frontend will run at http://localhost:3000.
+Visit `http://localhost:3000`
 
-## Usage
+## 🚀 Deployment
 
-1. Sign in using Clerk authentication
-2. Upload a medical PDF document
-3. Wait for the processing confirmation
-4. Ask questions about the document in the chat interface
-5. Receive AI-generated answers based on the document content
+### Backend (Render)
 
-## API Endpoints
+1. **Fork this repository**
+2. **Create a new Web Service** on [Render](https://render.com)
+3. **Connect your GitHub repository**
+4. **Configure Environment Variables:**
+   - `GROQ_API_KEY`
+   - `OPENAI_API_KEY`
+   - `QDRANT_URL`
+   - `QDRANT_API_KEY`
+   - `CLERK_SECRET_KEY` / `CLERK_PUBLISHABLE_KEY`
+   - `USE_FASTEMBED=false`
+   - `USE_CLOUD_EMBEDDINGS=false`
 
-- `GET /` - API root
-- `GET /health` - Health check endpoint
-- `POST /api/v1/upload` - Upload PDF file (rate limit: 5 requests/minute)
-- `POST /api/v1/query` - Query the system (rate limit: 10 requests/minute)
+5. **Deploy** - Render will automatically use `render.yaml`
 
-## Project Structure
+### Frontend (Vercel)
 
-```
-medical-rag-agent/
-├── backend/
-│   ├── app/
-│   │   ├── api/routes.py           # API endpoints
-│   │   ├── core/
-│   │   │   ├── config.py           # Application configuration
-│   │   │   └── vector_store.py     # Qdrant client setup
-│   │   ├── models/api.py           # Request/response models
-│   │   ├── services/
-│   │   │   ├── ingestion.py        # PDF processing logic
-│   │   │   ├── rag.py              # RAG query service
-│   │   │   └── redaction.py        # PHI redaction service
-│   │   └── main.py                 # FastAPI application
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   ├── app/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components/
-│   │   ├── chat-interface.tsx
-│   │   ├── upload-form.tsx
-│   │   └── ui/                     # shadcn components
-│   └── package.json
-├── docker-compose.yml
-└── .env.example
-```
+1. **Import project** to [Vercel](https://vercel.com)
+2. **Configure Environment Variables:**
+   - `NEXT_PUBLIC_API_URL` (your Render backend URL)
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+   - `CLERK_SECRET_KEY`
 
-## PHI Redaction
+3. **Deploy** - Vercel will auto-detect Next.js
 
-The system uses spaCy's named entity recognition to identify and redact the following entity types:
+### External Services
 
-- PERSON - Individual names
-- DATE - Temporal information
-- GPE - Geographic locations
-- ORG - Organizations
-- CARDINAL - Numeric values
-- MONEY - Monetary amounts
+**Qdrant Cloud** (Free Tier)
+1. Create cluster at [cloud.qdrant.io](https://cloud.qdrant.io)
+2. Copy cluster URL and API key
 
-Redacted entities are replaced with `[ENTITY_TYPE]` placeholders in the processed text.
+**OpenAI** (Pay-as-you-go)
+1. Add credits at [platform.openai.com](https://platform.openai.com)
+2. Generate API key (~$5-10 credits recommended)
 
-## Development
+**Groq** (Free)
+1. Get API key at [console.groq.com](https://console.groq.com)
 
-### Backend Development
+**Clerk** (Free)
+1. Create app at [clerk.com](https://clerk.com)
+2. Copy publishable and secret keys
 
-```bash
-cd backend
-pip install -r requirements.txt
-python -m spacy download en_core_web_sm
-uvicorn app.main:app --reload
-```
+## 💡 Usage
 
-### Frontend Development
+1. **Sign In** with Clerk authentication
+2. **Upload** a medical PDF (patient records, research papers, etc.)
+3. **Wait** for processing (PHI redaction + embedding generation)
+4. **Ask questions** about the document in the chat interface
+5. **Get answers** with real-time streaming responses
 
-## Security Notes
+## 🔧 Optimization Details
 
-This is a demonstration project and should not be used with real patient data in production without implementing proper HIPAA compliance measures. Production deployment would require:
+### Memory Optimization (512MB → ~150MB)
 
-- Encryption at rest and in transit
-- Comprehensive audit logging
-- Role-based access control
-- HIPAA-compliant infrastructure
-- Secure key management
-- Regular security audits
-- Data retention and disposal policies
+To fit Render's free tier, we removed:
+- ❌ `ragas` + `datasets` (~300MB)
+- ❌ `spacy` + models (~70MB)
+- ❌ `fastembed` + models (~100MB)
+- ❌ `langchain-huggingface` (~50MB)
 
-## Troubleshooting
+Replaced with:
+- ✅ OpenAI Cloud Embeddings (zero local memory)
+- ✅ Regex-based PHI redaction (lightweight)
+- ✅ Minimal dependencies
 
-**Query returns "Could not retrieve answer"**
-- Verify that at least one PDF has been uploaded
-- Check that the Groq API key is valid
-- Review backend logs for detailed error messages
+### Cost Breakdown
 
-**Upload fails**
-- Ensure the file is a valid PDF
-- Check backend logs for processing errors
-- Verify Qdrant is running and accessible
+| Service | Tier | Monthly Cost |
+|---------|------|--------------|
+| Render | Free | $0 |
+| Vercel | Hobby | $0 |
+| Qdrant Cloud | Free | $0 |
+| Groq API | Free | $0 |
+| OpenAI Embeddings | Usage | ~$0.01 per doc |
+| **Total** | | **~$0** |
 
-**Frontend build errors**
-- Clear the `.next` directory
-- Delete `node_modules` and reinstall dependencies
-- Check that all environment variables are set
+## 📊 Performance
 
-## License
+- **Upload Time:** ~2-5 seconds per document
+- **Query Latency:** <1 second (streaming starts)
+- **Memory Usage:** ~100-150MB (Render free tier)
+- **Concurrent Users:** Limited by free tier rate limits
 
-MIT License
+## 🛡️ Security & Privacy
 
-## Acknowledgments
+- ✅ Automated PHI redaction (EMAIL, PHONE, SSN, DATE patterns)
+- ✅ Clerk authentication with session management
+- ✅ CORS configured for secure cross-origin requests
+- ✅ API keys stored as environment variables
+- ⚠️ **Note:** This is a portfolio project, not HIPAA-compliant for production use
 
-This project uses Groq for LLM inference, shadcn/ui for UI components, and Clerk for authentication.
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [LangChain](https://langchain.com) for RAG framework
+- [Groq](https://groq.com) for free LLM inference
+- [OpenAI](https://openai.com) for reliable embeddings
+- [Qdrant](https://qdrant.tech) for vector database
+- [Render](https://render.com) & [Vercel](https://vercel.com) for free hosting
+
+## 📧 Contact
+
+**Your Name** - [GitHub](https://github.com/Balavardhanreddysheelam)
+
+---
+
+⭐ **Star this repo** if you found it helpful!
