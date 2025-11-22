@@ -220,9 +220,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Qdrant](https://qdrant.tech) for vector database
 - [Render](https://render.com) & [Vercel](https://vercel.com) for free hosting
 
-## 📧 Contact
-
-**Your Name** - [GitHub](https://github.com/Balavardhanreddysheelam)
 
 ---
 
