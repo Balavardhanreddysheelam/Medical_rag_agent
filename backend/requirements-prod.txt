@@ -10,6 +10,7 @@ groq
 langchain
 langchain-community
 langchain-groq
+langchain-openai
 # langchain-huggingface # Removed to save memory
 langchain-text-splitters
 langchain-core

@@ -15,13 +15,13 @@ logger = structlog.get_logger()
 
 class IngestionService:
     def __init__(self):
-        if not settings.HUGGINGFACE_API_KEY:
-            raise ValueError("HUGGINGFACE_API_KEY is required for Cloud Embeddings. Please set it in environment variables.")
+        if not settings.OPENAI_API_KEY:
+            raise ValueError("OPENAI_API_KEY is required.")
             
-        from app.core.cloud_embeddings import LightCloudEmbeddings
-        self.embeddings = LightCloudEmbeddings(
-            api_key=settings.HUGGINGFACE_API_KEY,
-            model=settings.EMBEDDING_MODEL
+        from langchain_openai import OpenAIEmbeddings
+        self.embeddings = OpenAIEmbeddings(
+            model=settings.EMBEDDING_MODEL,
+            openai_api_key=settings.OPENAI_API_KEY
         )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
@@ -37,7 +37,7 @@ class IngestionService:
             qdrant_client.create_collection(
                 collection_name=settings.QDRANT_COLLECTION_NAME,
                 vectors_config=models.VectorParams(
-                    size=768, # Dimension for all-mpnet-base-v2
+                    size=1536, # Dimension for text-embedding-3-small
                     distance=models.Distance.COSINE
                 )
             )

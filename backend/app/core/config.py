@@ -10,17 +10,18 @@ class Settings(BaseSettings):
     
     # External APIs
     GROQ_API_KEY: str
+    OPENAI_API_KEY: str
     
     # Vector DB
     QDRANT_URL: str = "http://qdrant:6333"
     QDRANT_API_KEY: Optional[str] = None
-    QDRANT_COLLECTION_NAME: str = "medical_docs_v2" # Changed to v2 for 768 dim support
+    QDRANT_COLLECTION_NAME: str = "medical_docs_openai" # New collection for OpenAI embeddings
     
     # Model Config
-    EMBEDDING_MODEL: str = "sentence-transformers/all-mpnet-base-v2"
+    EMBEDDING_MODEL: str = "text-embedding-3-small"
     LLM_MODEL: str = "llama-3.1-8b-instant"
-    USE_FASTEMBED: bool = False # Disabled in favor of Cloud Embeddings
-    USE_CLOUD_EMBEDDINGS: bool = True
+    USE_FASTEMBED: bool = False 
+    USE_CLOUD_EMBEDDINGS: bool = False # Disabled in favor of OpenAI
     HUGGINGFACE_API_KEY: Optional[str] = None
 
     class Config:

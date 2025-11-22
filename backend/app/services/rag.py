@@ -19,14 +19,14 @@ class RAGService:
         self.embeddings = None # Lazy load if needed, but we use qdrant for retrieval
         
         # We need the embedding model to embed the query
-        if not settings.HUGGINGFACE_API_KEY:
-             raise ValueError("HUGGINGFACE_API_KEY is required for Cloud Embeddings. Please set it in environment variables.")
+        if not settings.OPENAI_API_KEY:
+             raise ValueError("OPENAI_API_KEY is required.")
 
-        logger.info("Using Cloud Embeddings (Hugging Face API)")
-        from app.core.cloud_embeddings import LightCloudEmbeddings
-        self.embedding_model = LightCloudEmbeddings(
-            api_key=settings.HUGGINGFACE_API_KEY,
-            model=settings.EMBEDDING_MODEL
+        logger.info("Using OpenAI Embeddings")
+        from langchain_openai import OpenAIEmbeddings
+        self.embedding_model = OpenAIEmbeddings(
+            model=settings.EMBEDDING_MODEL,
+            openai_api_key=settings.OPENAI_API_KEY
         )
 
         self.prompt = ChatPromptTemplate.from_template(

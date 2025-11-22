@@ -21,6 +21,6 @@ services:
       - key: USE_FASTEMBED
         value: false
       - key: USE_CLOUD_EMBEDDINGS
-        value: true
-      - key: HUGGINGFACE_API_KEY
+        value: false
+      - key: OPENAI_API_KEY
         sync: false
