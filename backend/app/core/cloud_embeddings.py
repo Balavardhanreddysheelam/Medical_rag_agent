@@ -12,7 +12,7 @@ class LightCloudEmbeddings:
     but uses raw HTTP requests to save memory.
     """
     def __init__(self, api_key: str, model: str = "sentence-transformers/all-MiniLM-L6-v2"):
-        self.api_url = f"https://api-inference.huggingface.co/pipeline/feature-extraction/{model}"
+        self.api_url = f"https://api-inference.huggingface.co/models/{model}"
         self.headers = {"Authorization": f"Bearer {api_key}"}
         self.timeout = 30.0 # seconds
 
